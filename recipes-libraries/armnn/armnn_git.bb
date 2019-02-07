@@ -40,23 +40,27 @@ DEPENDS = " \
     protobuf \
     stb \
     arm-compute-library \
-    armnn-caffe \
-    armnn-tensorflow \
     opencv \
 "
 
 RDEPENDS_${PN} = " arm-compute-library protobuf boost "
 
+PACKAGECONFIG ??= "neon caffe tensorflow tensorflow_lite onnx examples unit_tests"
+
+PACKAGECONFIG[caffe] = "-DBUILD_CAFFE_PARSER=1 -DCAFFE_GENERATED_SOURCES=${STAGING_DIR_HOST}${datadir}/armnn-caffe,-DBUILD_CAFFE_PARSER=0,armnn-caffe"
+PACKAGECONFIG[examples] = "-DBUILD_ARMNN_EXAMPLES=1,-DBUILD_ARMNN_EXAMPLES=0"
+PACKAGECONFIG[neon] = "-DARMCOMPUTENEON=1,-DARMCOMPUTENEON=0 "
+PACKAGECONFIG[onnx] = "-DBUILD_ONNX_PARSER=1 -DONNX_GENERATED_SOURCES=${STAGING_DIR_HOST}${datadir}/armnn-onnx ,-DBUILD_ONNX_PARSER=0,armnn-onnx"
+PACKAGECONFIG[opencl] = "-DARMCOMPUTECL=1,-DARMCOMPUTECL=0,opencl-headers"
+PACKAGECONFIG[tensorflow] = "-DBUILD_TF_PARSER=1 -DTF_GENERATED_SOURCES=${STAGING_DIR_HOST}${datadir}/armnn-tensorflow,-DBUILD_TF_PARSER=0, armnn-tensorflow "
+PACKAGECONFIG[tensorflow_lite] = "-DTF_LITE_GENERATED_PATH=${STAGING_DIR_HOST}${datadir}/armnn-tensorflow-lite -DBUILD_TF_LITE_PARSER=1 ,-DBUILD_TF_LITE_PARSER=0, flatbuffers armnn-tensorflow"
+PACKAGECONFIG[unit_tests] = "-DBUILD_UNIT_TESTS=1,-DBUILD_UNIT_TESTS=0"
+
 EXTRA_OECMAKE=" \
     -DBUILD_SHARED_LIBS=ON -DREGISTER_INSTALL_PREFIX=OFF \
     -DARMCOMPUTE_ROOT=${STAGING_DIR_HOST}${datadir}/arm-compute-library \
-    -DCAFFE_GENERATED_SOURCES=${STAGING_DIR_HOST}${datadir}/armnn-caffe \
-    -DTF_GENERATED_SOURCES=${STAGING_DIR_HOST}${datadir}/armnn-tensorflow \
-    -DBUILD_CAFFE_PARSER=1 -DBUILD_TF_PARSER=1 \
-    -DARMCOMPUTENEON=1 \
     -DBUILD_TESTS=1 -DPROFILING=1 \
     -DTHIRD_PARTY_INCLUDE_DIRS=${STAGING_DIR_HOST}${includedir} \
-    -DBUILD_ARMNN_EXAMPLES=1 \
     -DGENERIC_LIB_VERSION=${PV} -DGENERIC_LIB_SOVERSION=${PV_MAJOR} \
 "
 
