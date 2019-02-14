@@ -13,6 +13,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=762a7ba8d2ddc3b38d88742fbaf0b62d \
                     file://include/half/LICENSE.txt;md5=fe7e5a4795c76b317919afd2d3da5983"
 
+DEPENDS = "rsync-native"
+
 SRC_URI = "git://github.com/ARM-software/ComputeLibrary.git;protocol=https"
 
 # Modify these as desired
