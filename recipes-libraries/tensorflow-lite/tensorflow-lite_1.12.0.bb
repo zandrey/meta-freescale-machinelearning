@@ -7,6 +7,7 @@ DEPENDS = "zlib unzip-native"
 SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=${BRANCH} \
 	file://download.patch \
+	file://contrib-lite-Makefile-Add-label_image-to-be-built-wi.patch \
 "
 
 SRCREV = "a6d8ffae097d0132989ae4688d224121ec6d8f35"
@@ -50,6 +51,11 @@ do_install(){
 	do
 		install -m 0555 $example ${D}${bindir}/${PN}-${PV}/examples
 	done
+
+	#install label_image data
+	cp ${S}/tensorflow/contrib/lite/examples/label_image/testdata/grace_hopper.bmp ${D}${bindir}/${PN}-${PV}/examples
+	cp ${S}/tensorflow/contrib/lite/java/ovic/src/testdata/labels.txt ${D}${bindir}/${PN}-${PV}/examples
+
 }
 
 PACKAGES = "${PN}"
