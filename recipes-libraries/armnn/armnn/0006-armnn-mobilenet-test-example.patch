@@ -15,7 +15,7 @@ new file mode 100644
 index 0000000..a26356e
 --- /dev/null
 +++ b/tests/ArmnnExamples/ArmnnExamples.cpp
-@@ -0,0 +1,883 @@
+@@ -0,0 +1,888 @@
 +/******************************************************************************
 + * Copyright (c) 2018, Texas Instruments Incorporated - http://www.ti.com/
 + *   All rights reserved.
@@ -94,6 +94,8 @@ index 0000000..a26356e
 +#define INPUT_VIDEO  1
 +#define INPUT_CAMERA 2
 +
++using TContainer = boost::variant<std::vector<float>, std::vector<int>, std::vector<unsigned char>>;
++
 +Mat test_image;
 +Rect rectCrop;
 +
@@ -130,9 +132,9 @@ index 0000000..a26356e
 +    if (input_type == INPUT_IMAGE)
 +    {
 +        /* use OpenCV to get the image */
-+        img = cv::imread(image_path, CV_LOAD_IMAGE_COLOR);
++        img = cv::imread(image_path, IMREAD_COLOR);
 +    }
-+    cv::cvtColor(img, img, CV_BGR2RGB); //convert image format from BGR(openCV format) to RGB (armnn required format).
++    cv::cvtColor(img, img, COLOR_BGR2RGB); //convert image format from BGR(openCV format) to RGB (armnn required format).
 +
 +    // store image and label in Image
 +    std::unique_ptr<ImageData> ret(new ImageData);
@@ -372,10 +374,10 @@ index 0000000..a26356e
 +        //const armnn::TensorShape inputTensorShape({ 1, 224, 224 3});
 +        params.m_ModelPath = modelPath;
 +        params.m_IsModelBinary = isModelBinary;
-+        params.m_ComputeDevice = computeDevice;
-+        params.m_InputBinding = inputName;
-+        params.m_InputTensorShape = inputTensorShape;
-+        params.m_OutputBinding = outputName;
++        std::copy(computeDevice.begin(), computeDevice.end(), std::back_inserter(params.m_ComputeDevices));
++        params.m_InputBindings = {inputName};
++        params.m_InputShapes = {*inputTensorShape};
++        params.m_OutputBindings = {outputName};
 +        params.m_EnableProfiling = enableProfiling;
 +        params.m_SubgraphId = 0;
 +        InferenceModel<TParser, TDataType> model(params, runtime);
@@ -407,7 +409,7 @@ index 0000000..a26356e
 +            free(ln);
 +            pclose(fp);
 +            cap = VideoCapture(device_number);
-+   	    namedWindow("ARMNN MobileNet Example", WINDOW_AUTOSIZE | CV_GUI_NORMAL);
++   	    namedWindow("ARMNN MobileNet Example", WINDOW_AUTOSIZE | WINDOW_GUI_NORMAL);
 +			input_type = INPUT_CAMERA; //camera input
 +	}
 +        else if((filename.substr(filename.find_last_of(".") + 1) == "mp4") ||
@@ -421,7 +423,7 @@ index 0000000..a26356e
 +		return (-1);
 +	    }
 +
-+    	    namedWindow("ARMNN MobileNet Example", WINDOW_AUTOSIZE | CV_GUI_NORMAL);
++    	    namedWindow("ARMNN MobileNet Example", WINDOW_AUTOSIZE | WINDOW_GUI_NORMAL);
 +	    input_type = INPUT_VIDEO; //video clip input
 +	}
 +        if (input_type != INPUT_IMAGE)
@@ -447,7 +449,10 @@ index 0000000..a26356e
 +
 +            predictStart = high_resolution_clock::now();
 +
-+	    model.Run(input_resized, output);
++            std::vector<TContainer> inputs{input_resized};
++            std::vector<TContainer> outputs{output};
++
++            model.Run(inputs, outputs);
 +
 +            predictEnd = high_resolution_clock::now();
 +
@@ -469,7 +474,7 @@ index 0000000..a26356e
 +            if (input_type != INPUT_IMAGE)
 +	    {
 +	    	//convert image format back to BGR for OpenCV imshow from RGB format required by armnn.
-+    		cv::cvtColor(test_image, test_image, CV_RGB2BGR);
++    		cv::cvtColor(test_image, test_image, COLOR_RGB2BGR);
 +	        // output identified object name on top of input image
 +		cv::putText(test_image, predict_target_name,
 +                cv::Point(rectCrop.x + 5,rectCrop.y + 20), // Coordinates

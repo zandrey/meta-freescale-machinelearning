@@ -14,7 +14,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index c06a869..cc11476 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -73,7 +73,7 @@ if(BUILD_CAFFE_PARSER)
+@@ -82,7 +82,7 @@ if(BUILD_CAFFE_PARSER)
  
      target_link_libraries(armnnCaffeParser armnn)
      target_link_libraries(armnnCaffeParser ${PROTOBUF_LIBRARIES})
@@ -23,7 +23,7 @@ index c06a869..cc11476 100644
  endif()
  
  if(BUILD_ONNX_PARSER)
-@@ -97,6 +97,7 @@ if(BUILD_ONNX_PARSER)
+@@ -106,6 +106,7 @@ if(BUILD_ONNX_PARSER)
  
      # Protobuf
      target_link_libraries(armnnOnnxParser ${PROTOBUF_LIBRARIES})
@@ -31,7 +31,7 @@ index c06a869..cc11476 100644
  endif()
  
  if(BUILD_TF_PARSER)
-@@ -120,6 +121,7 @@ if(BUILD_TF_PARSER)
+@@ -129,6 +130,7 @@ if(BUILD_TF_PARSER)
  
      # Protobuf (use the specific version tensorflow wants)
      target_link_libraries(armnnTfParser ${PROTOBUF_LIBRARIES})
@@ -39,15 +39,15 @@ index c06a869..cc11476 100644
  endif()
  
  if(BUILD_TF_LITE_PARSER)
-@@ -136,6 +138,7 @@ if(BUILD_TF_LITE_PARSER)
+@@ -147,6 +149,7 @@ if(BUILD_TF_LITE_PARSER)
  
-      target_link_libraries(armnnTfLiteParser ${Boost_FILESYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY})
-      target_link_libraries(armnnTfLiteParser armnn ${FLATBUFFERS_LIBRARY})
-+     set_target_properties( armnnTfLiteParser PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+     target_link_libraries(armnnTfLiteParser ${Boost_FILESYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY})
+     target_link_libraries(armnnTfLiteParser armnn ${FLATBUFFERS_LIBRARY})
++    set_target_properties( armnnTfLiteParser PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
  endif()
  
- # ArmNN source files required for all build options
-@@ -610,6 +613,8 @@ if(PROFILING_BACKEND_STREAMLINE)
+ if(BUILD_ARMNN_SERIALIZER)
+@@ -450,6 +453,8 @@ if(PROFILING_BACKEND_STREAMLINE)
      target_link_libraries(armnn pthread)
  endif()
  

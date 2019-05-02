@@ -14,9 +14,9 @@ index 16df7ba..5808edb 100644
 --- a/tests/InferenceTest.inl
 +++ b/tests/InferenceTest.inl
 @@ -299,6 +299,56 @@ int ClassifierInferenceTestMain(int argc,
-                                 TConstructDatabaseCallable constructDatabase,
-                                 const armnn::TensorShape* inputTensorShape)
- {
+     BOOST_ASSERT(inputBindingName);
+     BOOST_ASSERT(outputBindingName);
+ 
 +    int count;
 +    const char *p_input;
 +    char inmodelname[500];

@@ -14,25 +14,26 @@ diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
 index 0979d55..7c0cf2a 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
-@@ -1,3 +1,6 @@
-+find_package( OpenCV REQUIRED )
-+include_directories( ${OpenCV_INCLUDE_DIRS} )
-+
- # UnitTests
- include(CheckIncludeFiles)
- 
-@@ -226,3 +229,40 @@ if (BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_LITE_PARSER OR BUILD_ONNX_
+@@ -226,3 +223,48 @@ if (BUILD_CAFFE_PARSER OR BUILD_TF_PARSER OR BUILD_TF_LITE_PARSER OR BUILD_ONNX_
          ${Boost_PROGRAM_OPTIONS_LIBRARY})
      addDllCopyCommands(ExecuteNetwork)
  endif()
 +
 +if (BUILD_ARMNN_EXAMPLES)
++    find_package( OpenCV REQUIRED )
++    include_directories( ${OpenCV_INCLUDE_DIRS} )
++
 +    set(ArmnnExamples_sources
 +        ArmnnExamples/ArmnnExamples.cpp)
++
++    if(COMPILER_IS_GNU_LIKE)
++        set_source_files_properties(ArmnnExamples/ArmnnExamples.cpp PROPERTIES COMPILE_FLAGS "-Wno-conversion -Wno-sign-conversion -Wno-old-style-cast")
++    endif()
 +
 +    add_executable_ex(ArmnnExamples ${ArmnnExamples_sources})
 +
 +    target_include_directories(ArmnnExamples PRIVATE ../src/armnnUtils)
++    target_include_directories(ArmnnExamples PRIVATE ../src/backends)
 +    target_include_directories(ArmnnExamples PRIVATE ../src/armnn)
 +
 +    if (BUILD_CAFFE_PARSER)
