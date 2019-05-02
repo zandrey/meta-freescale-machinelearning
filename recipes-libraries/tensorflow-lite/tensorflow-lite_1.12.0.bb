@@ -2,7 +2,7 @@ DESCRIPTION = "TensorFlow Lite C++ Library"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=01e86893010a1b87e69a213faa753ebd"
 
-DEPENDS = "zlib"
+DEPENDS = "zlib unzip-native"
 
 SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=${BRANCH} \
