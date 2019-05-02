@@ -6,12 +6,34 @@ Please see the corresponding sections below for details.
 
 Dependencies
 ============
-
-This layer depends on:
-
+  This layer depends on:
   meta-fsl-bsp-release
   URI: https://source.codeaurora.org/external/imx/meta-fsl-bsp-release/
   layers: meta-fsl-bsp-release
   branch: sumo-4.14.78-1.0.0_ga
-  how to install: 
+
+
+How to install 
+==============
+  General instructions:
   https://source.codeaurora.org/external/imx/imx-manifest/tree/README?h=imx-linux-sumo
+  
+  Specifically for the machine learning enablement, use this settings:
+  repo init -u https://source.codeaurora.org/external/imx/imx-manifest -b imx-linux-sumo -m imx-4.14.78-1.0.0_machinelearning.xml
+
+
+Adding the meta-imx-machinelearning layer to your build
+=======================================================
+In order to use this layer, you need to make the build system aware of
+it.
+Assuming the meta-imx-machinelearning layer exists at the top-level of your
+yocto build tree, you can add it to the build system by adding the
+location of the meta-imx-machinelearning layer to bblayers.conf, along with any
+other layers needed. e.g.:
+
+  BBLAYERS ?= " \
+    /path/to/yocto/meta \
+    /path/to/yocto/meta-poky \
+    /path/to/yocto/meta-yocto-bsp \
+    /path/to/yocto/meta-imx-machinelearning \
+    "
