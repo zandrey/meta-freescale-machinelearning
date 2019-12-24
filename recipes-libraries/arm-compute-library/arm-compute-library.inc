@@ -1,10 +1,10 @@
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=762a7ba8d2ddc3b38d88742fbaf0b62d \
+LIC_FILES_CHKSUM = "file://LICENSE;md5=8948bc85114b3b716576ef8d732f034f \
                     file://include/half/LICENSE.txt;md5=fe7e5a4795c76b317919afd2d3da5983"
 
-SRC_URI = "git://github.com/ARM-software/ComputeLibrary.git;protocol=https"
-
-SRCREV = "514be65ad8d3340f53fd9591035352ed285811ba"
+SRC_URI = "git://github.com/ARM-software/ComputeLibrary.git;protocol=https \
+           file://0001-src-arm_compute-resolve-redundant-move-in-return-sta.patch \
+"
 
 S = "${WORKDIR}/git"
 
@@ -16,7 +16,7 @@ PACKAGECONFIG[validation] = "validation_tests=1,validation_tests=0"
 PACKAGECONFIG[opencl] = "opencl=1,opencl=0,opencl-headers virtual/opencl-icd"
 
 # Specify any options you want to pass to scons using EXTRA_OESCONS:
-EXTRA_OESCONS = "${PARALLEL_MAKE} extra_cxx_flags='-fPIC' build=native ${PACKAGECONFIG_CONFARGS}"
+EXTRA_OESCONS = "${PARALLEL_MAKE} extra_cxx_flags='-fPIC -Wno-noexcept' build=native ${PACKAGECONFIG_CONFARGS}"
 EXTRA_OESCONS += "${@bb.utils.contains('TARGET_ARCH', 'aarch64', 'arch=arm64-v8a neon=1', '', d)}"
 
 do_install() {

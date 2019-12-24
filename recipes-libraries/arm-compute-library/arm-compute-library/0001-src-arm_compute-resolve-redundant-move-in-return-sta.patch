@@ -1,0 +1,356 @@
+From f7c4c4eab9eef95c3ed0b790ab3bbf160ab93065 Mon Sep 17 00:00:00 2001
+From: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Date: Tue, 24 Dec 2019 19:35:21 +0000
+Subject: [PATCH] src arm_compute : resolve redundant move in return statement
+
+Resolve error [-Werror=redundant-move] when compiled with gcc9. This is
+caused by returning a local variable with std::move, which is not
+required and enforced by standard to be redundant.
+
+Paragraph 12.8 [class.copy] explicitly defines that local variables
+should be automatically copied upon execution of return statement,
+making it redundant to use std::move here. This is chacked by gcc9 and
+reported as error.
+
+Upstream-Status: Pending
+
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+---
+ arm_compute/graph/backends/FunctionHelpers.h  | 54 +++++++++----------
+ src/graph/backends/CL/CLDeviceBackend.cpp     |  4 +-
+ src/graph/backends/CL/CLFunctionsFactory.cpp  |  4 +-
+ src/graph/backends/GLES/GCDeviceBackend.cpp   |  4 +-
+ src/graph/backends/NEON/NEDeviceBackend.cpp   |  4 +-
+ src/graph/backends/NEON/NEFunctionFactory.cpp |  2 +-
+ 6 files changed, 33 insertions(+), 39 deletions(-)
+
+diff --git a/arm_compute/graph/backends/FunctionHelpers.h b/arm_compute/graph/backends/FunctionHelpers.h
+index 960011c1e..5c478e0aa 100644
+--- a/arm_compute/graph/backends/FunctionHelpers.h
++++ b/arm_compute/graph/backends/FunctionHelpers.h
+@@ -121,7 +121,7 @@ std::unique_ptr<IFunction> create_activation_layer(ActivationLayerNode &node)
+                                << " InPlace : " << is_in_place_operation(input, output)
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend batch normalization layer function
+@@ -165,7 +165,7 @@ std::unique_ptr<IFunction> create_batch_normalization_layer(BatchNormalizationLa
+                                << " InPlace: " << is_in_place_operation(input, output)
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend batch normalization layer function
+@@ -316,7 +316,7 @@ std::unique_ptr<IFunction> create_bounding_box_transform_layer(BoundingBoxTransf
+                                << " BoundingBox Info img H: " << bbox_info.img_height() << " "
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend channel shuffle layer function
+@@ -351,7 +351,7 @@ std::unique_ptr<IFunction> create_channel_shuffle_layer(ChannelShuffleLayerNode
+                                << " Num groups: " << num_groups
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend layer concatenate function
+@@ -407,7 +407,7 @@ std::unique_ptr<arm_compute::IFunction> create_concatenate_layer(ConcatenateLaye
+                                << qss.str()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend convolution layer function
+@@ -643,7 +643,7 @@ std::unique_ptr<IFunction> create_dequantization_layer(DequantizationLayerNode &
+                                << " Output shape: " << output->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ /** Create a backend detection output layer function
+  *
+@@ -688,7 +688,7 @@ std::unique_ptr<IFunction> create_detection_output_layer(DetectionOutputLayerNod
+                                << " DetectionOutputLayer info: " << detect_info
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend detection post process layer function
+@@ -743,7 +743,7 @@ std::unique_ptr<IFunction> create_detection_post_process_layer(DetectionPostProc
+                                << " DetectionPostProcessLayer info: " << detect_info
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend element-wise operation layer function
+@@ -843,7 +843,7 @@ std::unique_ptr<IFunction> create_flatten_layer(FlattenLayerNode &node)
+                                << " Output shape: " << output->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend fully connected layer function
+@@ -899,7 +899,7 @@ std::unique_ptr<IFunction> create_fully_connected_layer(FullyConnectedLayerNode
+                                << " Output shape: " << output->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend generate proposals layer function
+@@ -948,7 +948,7 @@ std::unique_ptr<IFunction> create_generate_proposals_layer(GenerateProposalsLaye
+                                << " Scores Out shape: " << scores_out->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend normalization layer function
+@@ -990,7 +990,7 @@ std::unique_ptr<IFunction> create_normalization_layer(NormalizationLayerNode &no
+                                << " Normalization info: " << norm_info.type()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend normalize planar YUV layer function
+@@ -1030,7 +1030,7 @@ std::unique_ptr<IFunction> create_normalize_planar_yuv_layer(NormalizePlanarYUVL
+                                << " Shape: " << input->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend pad layer function
+@@ -1068,7 +1068,7 @@ std::unique_ptr<IFunction> create_pad_layer(PadLayerNode &node)
+                                << " Output shape: " << output->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend permute layer function
+@@ -1107,7 +1107,7 @@ std::unique_ptr<IFunction> create_permute_layer(PermuteLayerNode &node)
+                                << " Permutation vector: " << perm
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend pooling layer function
+@@ -1146,7 +1146,7 @@ std::unique_ptr<IFunction> create_pooling_layer(PoolingLayerNode &node)
+                                << " Pooling info: " << pool_info.pool_type()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend priorbox layer function
+@@ -1188,7 +1188,7 @@ std::unique_ptr<IFunction> create_priorbox_layer(PriorBoxLayerNode &node)
+                                << " PriorBoxLayer info: " << prior_info
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend quantization layer function
+@@ -1225,7 +1225,7 @@ std::unique_ptr<IFunction> create_quantization_layer(QuantizationLayerNode &node
+                                << " Output shape: " << output->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend reorg layer function
+@@ -1262,7 +1262,7 @@ std::unique_ptr<IFunction> create_reorg_layer(ReorgLayerNode &node)
+                                << " Output shape: " << output->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend reshape layer function
+@@ -1299,7 +1299,7 @@ std::unique_ptr<IFunction> create_reshape_layer(ReshapeLayerNode &node)
+                                << " Output shape: " << output->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend resize layer function
+@@ -1338,7 +1338,7 @@ std::unique_ptr<IFunction> create_resize_layer(ResizeLayerNode &node)
+                                << " Interpolation: " << policy
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend ROI align layer function
+@@ -1383,7 +1383,7 @@ std::unique_ptr<IFunction> create_roi_align_layer(ROIAlignLayerNode &node)
+                                << " ROIPooling height: " << pool_info.pooled_height()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend slice layer function
+@@ -1420,7 +1420,7 @@ std::unique_ptr<IFunction> create_slice_layer(SliceLayerNode &node)
+                                << " Output shape: " << output->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend softmax layer function
+@@ -1459,7 +1459,7 @@ std::unique_ptr<IFunction> create_softmax_layer(SoftmaxLayerNode &node, GraphCon
+                                << " Output shape: " << output->info()->tensor_shape()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ 
+ /** Create a backend layer stack function
+@@ -1502,7 +1502,7 @@ std::unique_ptr<arm_compute::IFunction> create_stack_layer(StackLayerNode &node)
+                                << " Axis: " << axis
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ /** Create a backend Upsample layer function
+  *
+@@ -1546,7 +1546,7 @@ std::unique_ptr<IFunction> create_upsample_layer(UpsampleLayerNode &node, GraphC
+                                << " Upsampling policy: " << upsampling_policy
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ /** Create a backend YOLO layer function
+  *
+@@ -1589,7 +1589,7 @@ std::unique_ptr<IFunction> create_yolo_layer(YOLOLayerNode &node, GraphContext &
+                                << " Num classes: " << num_classes
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ } // namespace detail
+ } // namespace backends
+diff --git a/src/graph/backends/CL/CLDeviceBackend.cpp b/src/graph/backends/CL/CLDeviceBackend.cpp
+index de318476a..5f98caf2e 100644
+--- a/src/graph/backends/CL/CLDeviceBackend.cpp
++++ b/src/graph/backends/CL/CLDeviceBackend.cpp
+@@ -169,9 +169,7 @@ std::unique_ptr<ITensorHandle> CLDeviceBackend::create_tensor(const Tensor &tens
+     // Create backend tensor handle
+     TensorInfo info(tensor_desc.shape, 1, tensor_desc.data_type, tensor_desc.quant_info);
+     info.set_data_layout(tensor_desc.layout);
+-    auto backend_tensor_handle = support::cpp14::make_unique<CLTensorHandle>(info);
+-
+-    return std::move(backend_tensor_handle);
++    return support::cpp14::make_unique<CLTensorHandle>(info);
+ }
+ 
+ std::unique_ptr<ITensorHandle> CLDeviceBackend::create_subtensor(ITensorHandle *parent, TensorShape shape, Coordinates coords, bool extend_parent)
+diff --git a/src/graph/backends/CL/CLFunctionsFactory.cpp b/src/graph/backends/CL/CLFunctionsFactory.cpp
+index 57b48b0c6..d89e8c07f 100644
+--- a/src/graph/backends/CL/CLFunctionsFactory.cpp
++++ b/src/graph/backends/CL/CLFunctionsFactory.cpp
+@@ -158,7 +158,7 @@ std::unique_ptr<IFunction> create_detection_output_layer<CPPDetectionOutputLayer
+     wrap_function->register_tensor(input2);
+     wrap_function->register_tensor(output);
+ 
+-    return std::move(wrap_function);
++    return wrap_function;
+ }
+ template <>
+ std::unique_ptr<IFunction> create_detection_post_process_layer<CPPDetectionPostProcessLayer, CLTargetInfo>(DetectionPostProcessLayerNode &node)
+@@ -214,7 +214,7 @@ std::unique_ptr<IFunction> create_detection_post_process_layer<CPPDetectionPostP
+     wrap_function->register_tensor(output2);
+     wrap_function->register_tensor(output3);
+ 
+-    return std::move(wrap_function);
++    return wrap_function;
+ }
+ } // namespace detail
+ 
+diff --git a/src/graph/backends/GLES/GCDeviceBackend.cpp b/src/graph/backends/GLES/GCDeviceBackend.cpp
+index 83e2436dd..ab14326a0 100644
+--- a/src/graph/backends/GLES/GCDeviceBackend.cpp
++++ b/src/graph/backends/GLES/GCDeviceBackend.cpp
+@@ -111,9 +111,7 @@ std::unique_ptr<ITensorHandle> GCDeviceBackend::create_tensor(const Tensor &tens
+     // Create backend tensor handle
+     TensorInfo info(tensor_desc.shape, 1, tensor_desc.data_type, tensor_desc.quant_info);
+     info.set_data_layout(tensor_desc.layout);
+-    auto backend_tensor_handle = support::cpp14::make_unique<GCTensorHandle>(info);
+-
+-    return std::move(backend_tensor_handle);
++    return support::cpp14::make_unique<GCTensorHandle>(info);
+ }
+ 
+ std::unique_ptr<ITensorHandle> GCDeviceBackend::create_subtensor(ITensorHandle *parent, TensorShape shape, Coordinates coords, bool extend_parent)
+diff --git a/src/graph/backends/NEON/NEDeviceBackend.cpp b/src/graph/backends/NEON/NEDeviceBackend.cpp
+index 017b4f0f2..9fdefb85b 100644
+--- a/src/graph/backends/NEON/NEDeviceBackend.cpp
++++ b/src/graph/backends/NEON/NEDeviceBackend.cpp
+@@ -122,9 +122,7 @@ std::unique_ptr<ITensorHandle> NEDeviceBackend::create_tensor(const Tensor &tens
+     // Create backend tensor handle
+     TensorInfo info(tensor_desc.shape, 1, tensor_desc.data_type, tensor_desc.quant_info);
+     info.set_data_layout(tensor_desc.layout);
+-    auto backend_tensor_handle = support::cpp14::make_unique<NETensorHandle>(info);
+-
+-    return std::move(backend_tensor_handle);
++    return support::cpp14::make_unique<NETensorHandle>(info);
+ }
+ 
+ std::unique_ptr<ITensorHandle> NEDeviceBackend::create_subtensor(ITensorHandle *parent, TensorShape shape, Coordinates coords, bool extend_parent)
+diff --git a/src/graph/backends/NEON/NEFunctionFactory.cpp b/src/graph/backends/NEON/NEFunctionFactory.cpp
+index 7ff68b5a4..f10adeb18 100644
+--- a/src/graph/backends/NEON/NEFunctionFactory.cpp
++++ b/src/graph/backends/NEON/NEFunctionFactory.cpp
+@@ -179,7 +179,7 @@ std::unique_ptr<IFunction> create_normalization_layer<NENormalizationLayer, NETa
+                                << " Normalization info: " << norm_info.type()
+                                << std::endl);
+ 
+-    return std::move(func);
++    return func;
+ }
+ } // namespace detail
+ 
+-- 
+2.17.1
+
