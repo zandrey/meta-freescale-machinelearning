@@ -1,0 +1,15 @@
+diff --git a/3rdparty/openvx/include/ivx.hpp b/3rdparty/openvx/include/ivx.hpp
+old mode 100644
+new mode 100755
+index 5f8423f..60de1a9
+--- a/3rdparty/openvx/include/ivx.hpp
++++ b/3rdparty/openvx/include/ivx.hpp
+@@ -1739,7 +1739,7 @@ static const vx_enum
+         case VX_DF_IMAGE_YUYV: return CV_8UC2;
+         case VX_DF_IMAGE_NV12:
+         case VX_DF_IMAGE_NV21: return planeIdx == 0 ? CV_8UC1 : CV_8UC2;
+-        default: return CV_USRTYPE1;
++        default:               throw WrapperError(std::string(__func__)+"(): unsupported format type");
+         }
+     }
+ 
