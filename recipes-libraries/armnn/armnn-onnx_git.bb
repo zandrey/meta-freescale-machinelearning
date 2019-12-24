@@ -1,18 +1,21 @@
 SUMMARY = "ONNX protobuf files - used in ARMNN for Caffe network models"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=077ce3eaeaea91462d41c566300d2a02"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=efff5c5110f124a1e2163814067b16e7"
 
-SRC_URI = "git://github.com/onnx/onnx.git"
+BRANCH = "rel-1.6.1"
+PV = "1.6.1"
 
-PV = "1.3.0"
+SRC_URI = "git://github.com/onnx/onnx.git;branch=${BRANCH}"
 
-SRCREV = "bae6333e149a59a3faa9c4d9c44974373dcf5256"
+SRCREV = "1facb4c1bb9cc2107d4dbaf9fd647fefdbbeb0ab"
 
 DEPENDS = "protobuf-native"
 
 inherit cmake
 
 S = "${WORKDIR}/git"
+
+EXTRA_OECMAKE += "-DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3"
 
 do_install() {
     install -d ${D}${datadir}/${BPN}/onnx/
