@@ -1,17 +1,17 @@
 DESCRIPTION = "TensorFlow Lite C++ Library"
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=01e86893010a1b87e69a213faa753ebd"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=64a34301f8e355f57ec992c2af3e5157"
 
 DEPENDS = "zlib unzip-native"
 
 SRC_URI = " \
 	git://github.com/tensorflow/tensorflow.git;branch=${BRANCH} \
-	file://download.patch \
-	file://contrib-lite-Makefile-Add-label_image-to-be-built-wi.patch \
+	file://0001-download_dependencies-replace-curl-with-wget.patch \
+	file://makefile.patch \
 "
 
-SRCREV = "a6d8ffae097d0132989ae4688d224121ec6d8f35"
-BRANCH = "r1.12"
+SRCREV = "64c3d382cadf7bbe8e7e99884bede8284ff67f56"
+BRANCH = "r2.0"
 
 S = "${WORKDIR}/git"
 
@@ -24,37 +24,37 @@ do_configure(){
 	export http_proxy=${http_proxy}
 	export https_proxy=${https_proxy}
 
-	${S}/tensorflow/contrib/lite/tools/make/download_dependencies.sh
+	${S}/tensorflow/lite/tools/make/download_dependencies.sh
 
 	# Create Makefile in repo root so we can use do_compile command 'as-is'
-	echo "include tensorflow/contrib/lite/tools/make/Makefile" > Makefile
+	echo "include tensorflow/lite/tools/make/Makefile" > Makefile
 }
 
 do_install(){
 	# install libraries
 	install -d ${D}${libdir}
-	for lib in ${S}/tensorflow/contrib/lite/tools/make/gen/linux_${TARGET_ARCH}/lib/*
+	for lib in ${S}/tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/lib/*
 	do
 		install -m 0555 $lib ${D}${libdir}
 	done
 
 	# install header files
-	install -d ${D}${includedir}/tensorflow/contrib/lite
-	cd ${S}/tensorflow/contrib/lite
+	install -d ${D}${includedir}/tensorflow/lite
+	cd ${S}/tensorflow/lite
 	cp --parents \
         $(find . -name "*.h*") \
-        ${D}${includedir}/tensorflow/contrib/lite
+        ${D}${includedir}/tensorflow/lite
 
 	# install examples
 	install -d ${D}${bindir}/${PN}-${PV}/examples
-	for example in ${S}/tensorflow/contrib/lite/tools/make/gen/linux_${TARGET_ARCH}/bin/*
+	for example in ${S}/tensorflow/lite/tools/make/gen/linux_${TARGET_ARCH}/bin/*
 	do
 		install -m 0555 $example ${D}${bindir}/${PN}-${PV}/examples
 	done
 
 	#install label_image data
-	cp ${S}/tensorflow/contrib/lite/examples/label_image/testdata/grace_hopper.bmp ${D}${bindir}/${PN}-${PV}/examples
-	cp ${S}/tensorflow/contrib/lite/java/ovic/src/testdata/labels.txt ${D}${bindir}/${PN}-${PV}/examples
+	cp ${S}/tensorflow/lite/examples/label_image/testdata/grace_hopper.bmp ${D}${bindir}/${PN}-${PV}/examples
+	cp ${S}/tensorflow/lite/java/ovic/src/testdata/labels.txt ${D}${bindir}/${PN}-${PV}/examples
 
 }
 

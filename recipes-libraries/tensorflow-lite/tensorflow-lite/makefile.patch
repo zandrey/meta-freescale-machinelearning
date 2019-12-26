@@ -1,10 +1,17 @@
-diff --git a/tensorflow/contrib/lite/tools/make/Makefile b/tensorflow/contrib/lite/tools/make/Makefile
-old mode 100644
-new mode 100755
-index 16012a3..17f1046
---- a/tensorflow/contrib/lite/tools/make/Makefile
-+++ b/tensorflow/contrib/lite/tools/make/Makefile
-@@ -24,6 +24,12 @@ HOST_ARCH := $(shell if [[ $(shell uname -m) =~ i[345678]86 ]]; then echo x86_32
+From 505353afe44e5ce388435b4aaea757bb123414e2 Mon Sep 17 00:00:00 2001
+From: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Date: Thu, 26 Dec 2019 20:05:06 +0000
+Subject: [PATCH] makefile
+
+---
+ tensorflow/lite/tools/make/Makefile | 34 ++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/tensorflow/lite/tools/make/Makefile b/tensorflow/lite/tools/make/Makefile
+index 73c50d32721..c1a9abf88e1 100644
+--- a/tensorflow/lite/tools/make/Makefile
++++ b/tensorflow/lite/tools/make/Makefile
+@@ -28,6 +28,12 @@ HOST_ARCH := $(shell if uname -m | grep -q i[345678]86; then echo x86_32; else u
  TARGET := $(HOST_OS)
  TARGET_ARCH := $(HOST_ARCH)
  
@@ -17,16 +24,16 @@ index 16012a3..17f1046
  INCLUDES := \
  -I. \
  -I$(MAKEFILE_DIR)/../../../../../ \
-@@ -38,7 +44,7 @@ INCLUDES := \
+@@ -42,7 +48,7 @@ INCLUDES := \
  -I$(OBJDIR)
  # This is at the end so any globally-installed frameworks like protobuf don't
  # override local versions in the source tree.
 -INCLUDES += -I/usr/local/include
-+# INCLUDES += -I/usr/local/include
++#INCLUDES += -I/usr/local/include
  
  # These are the default libraries needed, but they can be added to or
  # overridden by the platform-specific settings in target makefiles.
-@@ -46,17 +52,17 @@ LIBS := \
+@@ -50,17 +56,17 @@ LIBS := \
  -lstdc++ \
  -lpthread \
  -lm \
@@ -37,31 +44,31 @@ index 16012a3..17f1046
  # There are no rules for compiling objects for the host system (since we don't
  # generate things like the protobuf compiler that require that), so all of
  # these settings are for the target compiler.
--CXXFLAGS := -O3 -DNDEBUG
-+CXXFLAGS += --std=c++11 -O3 -DNDEBUG
- CCFLAGS := ${CXXFLAGS}
+-CXXFLAGS := -O3 -DNDEBUG -fPIC
++CXXFLAGS := --std=c++11 -O3 -DNDEBUG -fPIC
+ CXXFLAGS += $(EXTRA_CXXFLAGS)
+-CFLAGS := ${CXXFLAGS}
 -CXXFLAGS += --std=c++11
--CFLAGS :=
 -LDOPTS := -L/usr/local/lib
 -ARFLAGS := -r
-+CFLAGS ?= -O3 -DNDEBUG
++CFLAGS ?= -O3 -DNDEBUG -fPIC
 +LDOPTS ?= -L/usr/local/lib
 +ARFLAGS ?= -r
  TARGET_TOOLCHAIN_PREFIX :=
  CC_PREFIX :=
  
-@@ -131,7 +137,7 @@ BENCHMARK_SRCS := $(filter-out \
+@@ -205,7 +211,7 @@ BENCHMARK_SRCS := $(filter-out \
  # CXXFLAGS or LIBS to work for a specific targetted architecture. All logic
  # based on platforms or architectures should happen within these files, to
  # keep this main makefile focused on the sources and dependencies.
 -include $(wildcard $(MAKEFILE_DIR)/targets/*_makefile.inc)
-+# include $(wildcard $(MAKEFILE_DIR)/targets/*_makefile.inc)
++#include $(wildcard $(MAKEFILE_DIR)/targets/*_makefile.inc)
  
  ALL_SRCS := \
  	$(MINIMAL_SRCS) \
-@@ -140,20 +146,14 @@ ALL_SRCS := \
- 	$(TF_LITE_CC_SRCS) \
- 	$(BENCHMARK_SRCS)
+@@ -215,20 +221,14 @@ ALL_SRCS := \
+ 	$(BENCHMARK_SRCS) \
+   $(CMD_LINE_TOOLS_SRCS)
  
 -# Where compiled objects are stored.
 -GENDIR := $(MAKEFILE_DIR)/gen/$(TARGET)_$(TARGET_ARCH)/
@@ -83,3 +90,6 @@ index 16012a3..17f1046
  
  MINIMAL_OBJS := $(addprefix $(OBJDIR), \
  $(patsubst %.cc,%.o,$(patsubst %.c,%.o,$(MINIMAL_SRCS))))
+-- 
+2.17.1
+
