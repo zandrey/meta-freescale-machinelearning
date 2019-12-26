@@ -1,0 +1,38 @@
+From f8debc044ef0baa199b0db33f41640be567757d8 Mon Sep 17 00:00:00 2001
+From: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Date: Thu, 26 Dec 2019 22:52:17 +0000
+Subject: [PATCH] CMakeLists: do not add ONNX_API for GCC build
+
+Do not enforce the protobuf to add dllexport_decl=ONNX_API: if the build
+is targeting Linux environment.
+
+This causes a massive chaos in component which are consuming generated
+source code from the protoc.
+
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+---
+ CMakeLists.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8351a5204..0c2dc76a3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,8 +144,12 @@ function(RELATIVE_PROTOBUF_GENERATE_CPP NAME SRCS HDRS ROOT_DIR DEPEND)
+     return()
+   endif()
+ 
+-  # Add ONNX_API prefix to protobuf classes and methods in all cases
+-  set(ONNX_DLLEXPORT_STR "dllexport_decl=ONNX_API:")
++  if (MSVC)
++    # Add ONNX_API prefix to protobuf classes and methods only in case of MSVC
++    set(ONNX_DLLEXPORT_STR "dllexport_decl=ONNX_API:")
++  else(MSVC)
++    set(ONNX_DLLEXPORT_STR "")
++  endif(MSVC)
+ 
+   set(${SRCS})
+   set(${HDRS})
+-- 
+2.17.1
+
