@@ -1,19 +1,20 @@
-From ba19ce3c785fb92077f6309db1125f1ef32cb08a Mon Sep 17 00:00:00 2001
+From a1a4f7733a06264310b36a0c41490f9c93e09fe1 Mon Sep 17 00:00:00 2001
 From: Qin Su <qsu@ti.com>
 Date: Wed, 21 Nov 2018 15:14:24 -0500
 Subject: [PATCH] add more test command line arguments
 
 Upstream-Status: Inappropriate [TI only test code]
 Signed-off-by: Qin Su <qsu@ti.com>
+
 ---
- tests/InferenceTest.inl | 50 +++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/InferenceTest.inl | 50 +++++++++++++++++++++++++++++++++++++++++
  1 file changed, 50 insertions(+)
 
 diff --git a/tests/InferenceTest.inl b/tests/InferenceTest.inl
-index 16df7ba..5808edb 100644
+index c91193f1..08d752d5 100644
 --- a/tests/InferenceTest.inl
 +++ b/tests/InferenceTest.inl
-@@ -299,6 +299,56 @@ int ClassifierInferenceTestMain(int argc,
+@@ -365,6 +365,56 @@ int ClassifierInferenceTestMain(int argc,
      BOOST_ASSERT(inputBindingName);
      BOOST_ASSERT(outputBindingName);
  
@@ -70,6 +71,3 @@ index 16df7ba..5808edb 100644
      return InferenceTestMain(argc, argv, defaultTestCaseIds,
          [=]
          ()
--- 
-1.9.1
-

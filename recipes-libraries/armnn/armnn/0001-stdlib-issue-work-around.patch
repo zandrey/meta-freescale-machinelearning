@@ -1,4 +1,4 @@
-From 3691057b51010c1bd979998c460ad7b43f97496f Mon Sep 17 00:00:00 2001
+From 1b3dc7984df729131a75108d0fd36233c24955f7 Mon Sep 17 00:00:00 2001
 From: Qin Su <qsu@ti.com>
 Date: Fri, 10 Aug 2018 11:02:14 -0400
 Subject: [PATCH] stdlib issue work around
@@ -10,6 +10,7 @@ fixed. This is currently an open issue on the cmake project [1].
 [1] https://gitlab.kitware.com/cmake/cmake/issues/16291
 
 Signed-off-by: Qin Su <qsu@ti.com>
+
 ---
  cmake/GlobalConfig.cmake | 28 ++++++++++++++++++++++++++++
  1 file changed, 28 insertions(+)
@@ -18,10 +19,10 @@ Signed-off-by: Qin Su <qsu@ti.com>
 diff --git a/cmake/GlobalConfig.cmake b/cmake/GlobalConfig.cmake
 old mode 100644
 new mode 100755
-index 2dbeada..2b88c16
+index 191cd9d8..12a271af
 --- a/cmake/GlobalConfig.cmake
 +++ b/cmake/GlobalConfig.cmake
-@@ -47,6 +47,34 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+@@ -60,6 +60,34 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /MP")
      add_definitions(-DNOMINMAX=1 -DNO_STRICT=1)
  endif()
@@ -56,5 +57,3 @@ index 2dbeada..2b88c16
  if("${CMAKE_SYSTEM_NAME}" STREQUAL Android)
      set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -llog")
      set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -llog")
---
-1.9.1

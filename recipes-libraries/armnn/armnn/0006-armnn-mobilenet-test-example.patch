@@ -1,18 +1,19 @@
-From 8e50d396567f5f19e376238831d5375516d2ea13 Mon Sep 17 00:00:00 2001
+From afab0cf10427234e1aad02d381181fbce5b35871 Mon Sep 17 00:00:00 2001
 From: Qin Su <qsu@ti.com>
 Date: Tue, 11 Dec 2018 15:57:57 -0500
 Subject: [PATCH] armnn mobilenet test example
 
 Upstream-Status: Inappropriate [TI only test code]
 Signed-off-by: Qin Su <qsu@ti.com>
+
 ---
- tests/ArmnnExamples/ArmnnExamples.cpp | 883 ++++++++++++++++++++++++++++++++++
- 1 file changed, 883 insertions(+)
+ tests/ArmnnExamples/ArmnnExamples.cpp | 888 ++++++++++++++++++++++++++
+ 1 file changed, 888 insertions(+)
  create mode 100644 tests/ArmnnExamples/ArmnnExamples.cpp
 
 diff --git a/tests/ArmnnExamples/ArmnnExamples.cpp b/tests/ArmnnExamples/ArmnnExamples.cpp
 new file mode 100644
-index 0000000..a26356e
+index 00000000..b5969b57
 --- /dev/null
 +++ b/tests/ArmnnExamples/ArmnnExamples.cpp
 @@ -0,0 +1,888 @@
@@ -904,6 +905,3 @@ index 0000000..a26356e
 +    }
 +}
 +
--- 
-1.9.1
-
