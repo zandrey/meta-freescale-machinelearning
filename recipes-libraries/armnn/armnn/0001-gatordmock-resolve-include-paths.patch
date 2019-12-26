@@ -1,0 +1,51 @@
+From 2265cc81eeec25c57d5cbcd607f998cbc63c46f0 Mon Sep 17 00:00:00 2001
+From: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Date: Thu, 26 Dec 2019 23:06:49 +0000
+Subject: [PATCH] gatordmock: resolve include paths
+
+Resolve include paths which were pointing into stale locations.
+
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+---
+ .../gatordmock/PeriodicCounterCaptureCommandHandler.hpp     | 2 +-
+ .../gatordmock/PeriodicCounterSelectionResponseHandler.hpp  | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tests/profiling/gatordmock/PeriodicCounterCaptureCommandHandler.hpp b/tests/profiling/gatordmock/PeriodicCounterCaptureCommandHandler.hpp
+index 4135a2fb..c00a49b7 100644
+--- a/tests/profiling/gatordmock/PeriodicCounterCaptureCommandHandler.hpp
++++ b/tests/profiling/gatordmock/PeriodicCounterCaptureCommandHandler.hpp
+@@ -7,7 +7,7 @@
+ 
+ #include <Packet.hpp>
+ #include <CommandHandlerFunctor.hpp>
+-#include "../../armnn/src/profiling/Packet.hpp"
++#include "../../../src/profiling/Packet.hpp"
+ 
+ #include <vector>
+ 
+diff --git a/tests/profiling/gatordmock/PeriodicCounterSelectionResponseHandler.hpp b/tests/profiling/gatordmock/PeriodicCounterSelectionResponseHandler.hpp
+index faf9792a..9803fe4f 100644
+--- a/tests/profiling/gatordmock/PeriodicCounterSelectionResponseHandler.hpp
++++ b/tests/profiling/gatordmock/PeriodicCounterSelectionResponseHandler.hpp
+@@ -3,8 +3,8 @@
+ // SPDX-License-Identifier: MIT
+ //
+ 
+-#include "../../armnn/src/profiling/CommandHandlerFunctor.hpp"
+-#include "../../armnn/src/profiling/Packet.hpp"
++#include "../../../src/profiling/CommandHandlerFunctor.hpp"
++#include "../../../src/profiling/Packet.hpp"
+ 
+ #include <vector>
+ 
+@@ -42,4 +42,4 @@ private:
+ 
+ }    // namespace gatordmock
+ 
+-}    // namespace armnn
+\ No newline at end of file
++}    // namespace armnn
+-- 
+2.17.1
+

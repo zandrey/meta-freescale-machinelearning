@@ -25,6 +25,7 @@ inherit cmake
 SRC_URI = " \
     git://github.com/ARM-software/armnn.git;name=armnn;branch=${BRANCH} \
     file://0001-ProfilingGuidTest-fix-gcc9-compilation-issue.patch \
+    file://0001-gatordmock-resolve-include-paths.patch \
     file://0001-stdlib-issue-work-around.patch \
     file://0003-add-more-test-command-line-arguments.patch \
     file://0005-add-armnn-mobilenet-test-example.patch \
