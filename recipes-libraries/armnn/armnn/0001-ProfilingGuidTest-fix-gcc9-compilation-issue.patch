@@ -1,0 +1,47 @@
+From 745976f1104ba56a3e3f2a443451cf8a3ed94dee Mon Sep 17 00:00:00 2001
+From: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Date: Thu, 26 Dec 2019 22:04:39 +0000
+Subject: [PATCH] ProfilingGuidTest: fix gcc9 compilation issue
+
+Fix following trivial issue when gcc9 is used for compilation:
+error: conversion to 'long unsigned int' from 'int' may change the sign of the
+result [-Werror=sign-conversion]
+
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+---
+ src/profiling/test/ProfilingGuidTest.cpp | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/profiling/test/ProfilingGuidTest.cpp b/src/profiling/test/ProfilingGuidTest.cpp
+index c0dd986c..e3f6d789 100644
+--- a/src/profiling/test/ProfilingGuidTest.cpp
++++ b/src/profiling/test/ProfilingGuidTest.cpp
+@@ -67,18 +67,18 @@ BOOST_AUTO_TEST_CASE(DynamicGuidTest)
+ std::string GenerateRandomString()
+ {
+     // Random a string lengh from 3 - 100
+-    int minLength = 3;
+-    int maxLength = 100;
++    unsigned int minLength = 3;
++    unsigned int maxLength = 100;
+ 
+     // Random a character from lower case alphabets, upper case alphabets, numbers and special characters
+-    int minAscii = 32; // space 32
+-    int maxAscii = 126; // ~
++    unsigned int minAscii = 32; // space 32
++    unsigned int maxAscii = 126; // ~
+ 
+-    int stringLen = rand() % (maxLength - minLength + 1) + minLength;
++    unsigned int stringLen = static_cast<unsigned int>(rand()) % (maxLength - minLength + 1) + minLength;
+     char str[stringLen + 1];
+-    for (int i = 0; i < stringLen; ++i)
++    for (unsigned int i = 0; i < stringLen; ++i)
+     {
+-        int randAscii = rand() % (maxAscii - minAscii + 1) + minAscii;
++        unsigned int randAscii = static_cast<unsigned int>(rand()) % (maxAscii - minAscii + 1) + minAscii;
+         str[i] = char(randAscii);
+     }
+     str[stringLen] = '\0';
+-- 
+2.17.1
+

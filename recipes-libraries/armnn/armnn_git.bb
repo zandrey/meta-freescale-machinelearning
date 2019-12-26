@@ -6,11 +6,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3e14a924c16f7d828b8335a59da64074 \
                     file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
 PR = "r1"
-PV = "19.02"
+PV = "19.11"
 PV_MAJOR = "${@d.getVar('PV',d,1).split('.')[0]}"
 
-BRANCH = "master"
-SRCREV = "dbfb8549d4aa80115a7049b3e94788fb7a474d9b"
+# Following branch and commit corresponds exactly to the tag [v19.11], which marks the release
+BRANCH = "branches/armnn_19_11"
+SRCREV = "c73140066bab4b9178b2e1a1703a7ebc1b069fc1"
+
+BRANCH_TIDL-API = "master"
 SRCREV_tidl-api = "7e9a3942ec38efd64d45e34c10cba2f2938f5618"
 
 SRCREV_FORMAT = "armnn"
@@ -21,15 +24,14 @@ inherit cmake
 
 SRC_URI = " \
     git://github.com/ARM-software/armnn.git;name=armnn;branch=${BRANCH} \
+    file://0001-ProfilingGuidTest-fix-gcc9-compilation-issue.patch \
     file://0001-stdlib-issue-work-around.patch \
-    file://0002-enable-use-of-boost-shared-library.patch \
     file://0003-add-more-test-command-line-arguments.patch \
-    file://0004-generate-versioned-library.patch \
     file://0005-add-armnn-mobilenet-test-example.patch \
     file://0006-armnn-mobilenet-test-example.patch \
     file://0007-enable-use-of-arm-compute-shared-library.patch \
     http://download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_224.tgz;name=mobilenet;subdir=${WORKDIR}/tfmodel;destsuffix=tfmodel \
-    git://git.ti.com/tidl/tidl-api.git;name=tidl-api;branch=${BRANCH};subdir=${WORKDIR}/tidl-api;destsuffix=tidl-api \
+    git://git.ti.com/tidl/tidl-api.git;name=tidl-api;branch=${BRANCH_TIDL-API};subdir=${WORKDIR}/tidl-api;destsuffix=tidl-api \
 "
 
 SRC_URI[mobilenet.md5sum] = "d5f69cef81ad8afb335d9727a17c462a"
@@ -57,6 +59,7 @@ PACKAGECONFIG[unit_tests] = "-DBUILD_UNIT_TESTS=1,-DBUILD_UNIT_TESTS=0"
 
 EXTRA_OECMAKE=" \
     -DBUILD_SHARED_LIBS=ON -DREGISTER_INSTALL_PREFIX=OFF \
+    -DSHARED_BOOST=ON \
     -DARMCOMPUTE_ROOT=${STAGING_DIR_HOST}${datadir}/arm-compute-library \
     -DBUILD_TESTS=1 -DPROFILING=1 \
     -DTHIRD_PARTY_INCLUDE_DIRS=${STAGING_DIR_HOST}${includedir} \
