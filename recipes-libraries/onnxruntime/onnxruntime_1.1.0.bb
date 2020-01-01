@@ -3,18 +3,13 @@ SECTION = "devel"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=980784f0a7f667becbed133924b263bf"
 
-DEPENDS = "libpng zlib ${BPN}-native"
+DEPENDS = "libpng zlib libeigen ${BPN}-native"
 
-GIT_onnxruntime = "gitsm://github.com/Microsoft/onnxruntime.git;branch=rel-0.3.0;name=onnxruntime"
-GIT_eigen = "git://github.com/eigenteam/eigen-git-mirror.git;branch=branches/3.3;name=eigen"
-
-SRCREV_onnxruntime = "5751f1b4be7d2b39602e80156feea08ef95321c3"
-SRCREV_eigen = "cf794d3b741a6278df169e58461f8529f43bce5d"
+SRCREV = "c33dab394f4984ab28a370d96c373f0fca84d826"
 
 SRC_URI = "\
-    ${GIT_onnxruntime} \
-    ${GIT_eigen};destsuffix=git/eigen \
-    file://0001-fix-epilogue-code-695.patch \
+	gitsm://github.com/Microsoft/onnxruntime.git;branch=rel-1.1.0;name=onnxruntime \
+	file://0001-fix-epilogue-code-695.patch \
 "
 
 SRCREV_FORMAT = "onnxruntime"
@@ -39,8 +34,8 @@ OECMAKE_GENERATOR = "Unix Makefiles"
 EXTRA_OECMAKE += "\
 -Donnxruntime_USE_PREBUILT_PB=OFF \
 -DONNX_CUSTOM_PROTOC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/${PN}-native/protoc \
--Donnxruntime_USE_PREINSTALLED_EIGEN=ON \
--Deigen_SOURCE_PATH=${WORKDIR}/git/eigen \
+-Donnxruntime_USE_PREINSTALLED_EIGEN=OFF \
+-Deigen_SOURCE_PATH= \
 -DCMAKE_NO_SYSTEM_FROM_IMPORTED=True \
 -Donnxruntime_RUN_ONNX_TESTS=OFF \
 -Donnxruntime_GENERATE_TEST_REPORTS=ON \
@@ -72,3 +67,7 @@ PACKAGECONFIG[python] = "-Donnxruntime_ENABLE_PYTHON=ON, -Donnxruntime_ENABLE_PY
 
 PACKAGECONFIG[test] = "-Donnxruntime_BUILD_UNIT_TESTS=ON, -Donnxruntime_BUILD_UNIT_TESTS=OFF"
 PACKAGECONFIG[benchmark] = "-Donnxruntime_BUILD_BENCHMARKS=ON, -Donnxruntime_BUILD_BENCHMARKS=OFF"
+
+#do_fetch_append () {
+#	os.system("cd ${S} && ${FETCHCMD_git} submodule update --init --force --recursive");
+#}
